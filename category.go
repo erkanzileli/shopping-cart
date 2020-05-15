@@ -1,8 +1,8 @@
 package shoppingCart
 
 type Category struct {
-	Title    string
-	Parent   *Category
+	Title  string
+	Parent *Category
 }
 
 func NewCategory(title string) *Category {

@@ -3,6 +3,7 @@ package shoppingCart
 import (
 	"errors"
 	"fmt"
+	"io"
 )
 
 var (
@@ -118,7 +119,7 @@ func (c *Cart) GetTotalAmountAfterDiscounts() float64 {
 	return totalAmount - c.CampaignDiscount - c.CouponDiscount
 }
 
-func (c *Cart) Print(dc DeliveryCost) string {
+func (c *Cart) Print(dc DeliveryCost, w io.Writer) error {
 	result := `CategoryName, ProductName, Quantity, UnitPrice, TotalPrice, TotalDiscount`
 	discount := c.GetCampaignDiscount() + c.GetCouponDiscount()
 
@@ -129,7 +130,8 @@ func (c *Cart) Print(dc DeliveryCost) string {
 	}
 	result += fmt.Sprintf("\nTotal: %v, Delivery Cost: %v", c.GetTotalAmountAfterDiscounts(), c.GetDeliveryCost(dc))
 
-	return result
+	_, err := w.Write([]byte(result))
+	return err
 }
 
 func calculateCampaignDiscount(items []*cartItem, cam *Campaign) float64 {

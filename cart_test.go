@@ -1,6 +1,7 @@
 package shoppingCart
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -228,7 +229,11 @@ Food, Chocolate, 3, 25, 75, %v
 Food, Cocoa, 2, 20, 40, %v
 Total: %v, Delivery Cost: %v`, discount, discount, c.GetTotalAmountAfterDiscounts(), c.GetDeliveryCost(dc))
 
-	assert.Equal(t, want, c.Print(dc))
+	buf := &bytes.Buffer{}
+
+	err := c.Print(dc, buf)
+	assert.Nil(t, err)
+	assert.Equal(t, want, buf.String())
 }
 
 func TestCart_GetDeliveryCost(t *testing.T) {
